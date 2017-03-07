@@ -1,72 +1,40 @@
-#load packages
-library("dplyr")
-library("data.table")
+Codebook
+
+Data Set Information:
+
+The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data. 
+
+The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain.
+
+Check the README.txt file for further details about this dataset. 
+
+A video of the experiment including an example of the 6 recorded activities with one of the participants can be seen in the following link: [Web Link]
+
+An updated version of this dataset can be found at [Web Link]. It includes labels of postural transitions between activities and also the full raw inertial signals instead of the ones pre-processed into windows.
 
 
-# assign the weblink for data to variable url
-url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+Attribute Information:
 
-#download the zip file into current working directory
-
-download.file(url, destfile = "Dataset.zip")
-
-#Unizip the downloaded dataset
-
-unzip("Dataset.zip")
-
-#set path to unzipped folder
-
-setwd("~./UCI HAR Dataset")
-
-#Load train data
-data_train <- read.table("~./UCI HAR Dataset/train/X_train.txt")
-activity_train <- read.table("~./UCI HAR Dataset/train/y_train.txt")
-subject_train <- read.table("~./UCI HAR Dataset/train/subject_train.txt")
+For each record in the dataset it is provided: 
+- Triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration. 
+- Triaxial Angular velocity from the gyroscope. 
+- A 561-feature vector with time and frequency domain variables. 
+- Its activity label. 
+- An identifier of the subject who carried out the experiment.
 
 
-#Load and view test data
-data_test <- read.table("~./UCI HAR Dataset/test/X_test.txt")
-activity_test <- read.table("~./UCI HAR Dataset/test/y_test.txt")
-subject_test <- read.table("~./UCI HAR Dataset/test/subject_test.txt")
+Relevant Papers:
 
-#Load and view features data
-features <- read.table("~./UCI HAR Dataset/features.txt")
-features <- as.character(features[,2])
+Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012 
 
-#Merge the  test and train datasets by rows
-all_data <- rbind(data_train, data_test)
-all_activity_data <- rbind(activity_train, activity_test)
-all_subject_data <- rbind(subject_train, subject_test)
+Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra, Jorge L. Reyes-Ortiz. Energy Efficient Smartphone-Based Activity Recognition using Fixed-Point Arithmetic. Journal of Universal Computer Science. Special Issue in Ambient Assisted Living: Home Care. Volume 19, Issue 9. May 2013
 
-#read activity lables
+Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. 4th International Workshop of Ambient Assited Living, IWAAL 2012, Vitoria-Gasteiz, Spain, December 3-5, 2012. Proceedings. Lecture Notes in Computer Science 2012, pp 216-223. 
 
-activity_lables <- read.table("~./UCI HAR Dataset/activity_labels.txt")
+Jorge Luis Reyes-Ortiz, Alessandro Ghio, Xavier Parra-Llanas, Davide Anguita, Joan Cabestany, Andreu Català. Human Activity and Motion Disorder Recognition: Towards Smarter Interactive Cognitive Environments. 21th European Symposium on Artificial Neural Networks, Computational Intelligence and Machine Learning, ESANN 2013. Bruges, Belgium 24-26 April 2013.
 
-#Set Names
-names(all_activity_data) <- paste("Activity_Num")
-names(all_subject_data) <- paste("Subject")
-colnames(all_data) <- features
-colnames(activity_lables) <- c("activity_num", "activity_name")
 
-#Merge Columns
 
-data <- cbind(cbind(all_subject_data,all_activity_data),all_data)
+Citation Request:
 
-#Remove duplicate column names
-data <- data[ , !duplicated(colnames(data))]
-
-#Select data 
-
-select(data,matches("mean\\(\\)|std\\(\\)"))
-
-#Rename columns with descriptive names
-names(data)<-gsub("^t", "time", names(data))
-names(data)<-gsub("^f", "frequency", names(data))
-names(data)<-gsub("Acc", "Accelerometer", names(data))
-names(data)<-gsub("Gyro", "Gyroscope", names(data))
-names(data)<-gsub("Mag", "Magnitude", names(data))
-names(data)<-gsub("BodyBody", "Body", names(data))
-
-#write tidy dataset to tidy_data.txt
-
-write.table(data, file = "tidy_data.txt",row.name=FALSE)
+Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. A Public Domain Dataset for Human Activity Recognition Using Smartphones. 21th European Symposium on Artificial Neural Networks, Computational Intelligence and Machine Learning, ESANN 2013. Bruges, Belgium 24-26 April 2013.
